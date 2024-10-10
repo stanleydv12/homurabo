@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Log file
+LOG_FILE="/var/log/snapshot_script.log"
 # Retention period in days
 RETENTION_PERIOD=7
 
@@ -7,8 +9,8 @@ RETENTION_PERIOD=7
 date=$(date +"%d-%m-%Y")
 retention_date=$(date -d "-$RETENTION_PERIOD days" +"%d-%m-%Y")
 
-echo "Current date: $date"
-echo "Retention date: $retention_date"
+echo "[$(date)] Current date: $date" >> "$LOG_FILE"
+echo "[$(date)] Retention date: $retention_date" >> "$LOG_FILE"
 
 # List all VMs
 vms=$(virsh list --all --name)
@@ -16,7 +18,7 @@ vms=$(virsh list --all --name)
 # Delete snapshot for each VM
 for vm in $vms; do
     if [ -n "$vm" ]; then
-        echo "Deleting snapshot for $vm VM"
+        echo "[$(date)] Checking snapshots for VM: $vm" >> "$LOG_FILE"
 
         # List all snapshots for the VM
         snapshots=$(virsh snapshot-list "$vm" --name)
@@ -27,7 +29,7 @@ for vm in $vms; do
             snapshot_name="${vm}-snapshot-${snapshot_date}"
 
             if [[ "$snapshot_date" < "$retention_date" ]]; then
-                echo "Deleting snapshot: $snapshot_name"
+                echo "[$(date)] Deleting snapshot: $snapshot_name" >> "$LOG_FILE"
                 virsh snapshot-delete "$vm" --snapshotname "$snapshot_name"
             fi
         done
