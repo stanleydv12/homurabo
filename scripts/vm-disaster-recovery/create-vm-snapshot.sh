@@ -19,12 +19,9 @@ for vm in $vms; do
 
         name="${vm}-snapshot-${date}"
 
-        # Create the snapshot with the specified file path
-        if virsh snapshot-create-as --domain "$vm" --name "$name"; then
-            echo "[$(date)] Snapshot created successfully for $vm: $name" >> "$LOG_FILE"
-        else
-            echo "[$(date)] Failed to create snapshot for $vm" >> "$LOG_FILE"
-        fi
+        virsh snapshot-create-as --domain "$vm" --name "$name" \
+        && echo "[$(date)] Snapshot created successfully for $vm: $name" >> "$LOG_FILE" \
+        || echo "[$(date)] Failed to create snapshot for $vm" >> "$LOG_FILE"
     fi 
 done
 

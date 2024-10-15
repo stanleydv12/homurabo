@@ -9,6 +9,7 @@ RETENTION_PERIOD=7
 date=$(date +"%d-%m-%Y")
 retention_date=$(date -d "-$RETENTION_PERIOD days" +"%d-%m-%Y")
 
+echo "[$(date)] Snapshot cleanup process started" >> "$LOG_FILE"
 echo "[$(date)] Current date: $date" >> "$LOG_FILE"
 echo "[$(date)] Retention date: $retention_date" >> "$LOG_FILE"
 
@@ -36,4 +37,5 @@ for vm in $vms; do
     fi
 done
 
+echo "[$(date)] Snapshot cleanup process completed" >> "$LOG_FILE"
 
