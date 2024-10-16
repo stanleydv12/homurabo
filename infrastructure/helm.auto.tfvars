@@ -5,13 +5,9 @@ helm = [
     name       = "harbor"
     repository = "https://helm.goharbor.io"
     chart      = "harbor"
-    set = [
+    values = [
       {
-        name  = "ingress.enabled"
-        value = true
-      },
-      {
-        name  = "ingress.core.hostname"
+        name  = "expose.ingress.hosts.core"
         value = "harbor.homurabu.lab"
       }
     ]

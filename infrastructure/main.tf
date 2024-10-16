@@ -1,15 +1,16 @@
 resource "helm_release" "resources" {
-  for_each   = var.helm
-  helm_config = each.value
+  for_each = { for helm_config in var.helm : helm_config.name => helm_config }
 
-  name       = helm_config.name
-  repository = helm_config.repository
-  chart      = helm_config.chart
+  name       = each.value.name
+  repository = each.value.repository
+  chart      = each.value.chart
   namespace  = var.namespace
 
-  set {
-    for_each = helm_config.values
-    name  = set.value.name
-    value = set.value.value
+  dynamic "set" {
+    for_each = each.value.values
+    content {
+      name  = set.value.name
+      value = set.value.value
+    }
   }
 }
