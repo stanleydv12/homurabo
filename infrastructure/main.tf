@@ -5,6 +5,7 @@ resource "helm_release" "resources" {
   repository = each.value.repository
   chart      = each.value.chart
   namespace  = var.namespace
+  create_namespace = true
 
   dynamic "set" {
     for_each = each.value.values
